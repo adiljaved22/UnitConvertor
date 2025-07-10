@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,12 +57,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Convert() {
     var inputvalue by remember { mutableStateOf("") }
-    val inputunit by remember { mutableStateOf("Centimeters") }
-    val outputunit by remember { mutableStateOf("Meters") }
-    val outputvalue by remember { mutableStateOf("") }
+    var inputunit by remember { mutableStateOf("Meters") }
+    var outputunit by remember { mutableStateOf("Meters") }
+    var outputvalue by remember { mutableStateOf("") }
     var iExpanded by remember { mutableStateOf(false) }
     var oExpanded by remember { mutableStateOf(false) }
-    var unitFactor = remember { mutableStateOf(0.01) }
+    var conversionFactor = remember { mutableStateOf(1.00) }
+    var oconversionFactor= remember { mutableStateOf(1.00) }
+
+    fun unitconvert(){
+        val inputvaluedouble=inputvalue.toDoubleOrNull()?:0.0
+        val result=(inputvaluedouble*conversionFactor.value*100 / oconversionFactor.value).roundToInt()/100
+        outputvalue=result.toString()
+    }
+
     Column(
 
         modifier = Modifier.fillMaxSize(),
@@ -73,7 +82,9 @@ fun Convert() {
 
         OutlinedTextField(
             value = inputvalue,
-            onValueChange = {inputvalue=it},
+            onValueChange = {inputvalue=it
+                unitconvert()
+                            },
             label = {
                 Text("Enter Value")
             }
@@ -87,16 +98,40 @@ fun Convert() {
             Box {
                 Button(onClick = {
                     iExpanded = true
-                    Toast.makeText(context, "Button is working", Toast.LENGTH_LONG).show()
+                 /*   Toast.makeText(context, "Button is working", Toast.LENGTH_LONG).show()*/
                 }) {
-                    Text("Select")
+                    Text(inputunit)
                     Icon(Icons.Default.ArrowDropDown, contentDescription = "Drop down")
                 }
                 DropdownMenu(expanded = iExpanded, onDismissRequest = { iExpanded = false }) {
-                    DropdownMenuItem(text = { Text("Centimeters") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Meters") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Feets") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Inches") }, onClick = {})
+                    DropdownMenuItem(text = { Text("Centimeters") },
+                        onClick = {
+                            iExpanded=false
+                            inputunit="Centimeters"
+                            conversionFactor.value=0.01
+                            unitconvert()
+
+                        })
+                    DropdownMenuItem(text = { Text("Meters") }, onClick = {
+
+                        iExpanded=false
+                        inputunit="Meters"
+                        conversionFactor.value=1.0
+                        unitconvert()
+
+                    })
+                    DropdownMenuItem(text = { Text("Feets") }, onClick = {
+                        iExpanded=false
+                        inputunit="Feets"
+                        conversionFactor.value=0.3048
+                            unitconvert()
+                    })
+                    DropdownMenuItem(text = { Text("Millimeters") }, onClick = {
+                        iExpanded=false
+                        inputunit="Millimeters"
+                        conversionFactor.value=0.001
+                        unitconvert()
+                    })
                 }
             }
             Spacer(modifier = Modifier.width(10.dp))
@@ -104,16 +139,43 @@ fun Convert() {
                 Button(onClick = {
                     oExpanded = true
 
-                    Toast.makeText(context, "Button 2 is working", Toast.LENGTH_LONG).show()
+                  /*  Toast.makeText(context, "Button 2 is working", Toast.LENGTH_LONG).show()*/
                 }) {
-                    Text("Select")
+                    Text(outputunit)
                     Icon(Icons.Default.ArrowDropDown, contentDescription = "Drop down")
                 }
                 DropdownMenu(expanded = oExpanded, onDismissRequest = { oExpanded = false }) {
-                    DropdownMenuItem(text = { Text("Centimeters") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Meters") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Feets") }, onClick = {})
-                    DropdownMenuItem(text = { Text("Inches") }, onClick = {})
+                    DropdownMenuItem(text = { Text("Centimeters") },
+                        onClick = {
+                            oExpanded=false
+                            outputunit="Centimeters"
+                            oconversionFactor.value=0.01
+                            unitconvert()
+
+
+                    })
+                    DropdownMenuItem(text = { Text("Meters") }, onClick = {
+                        oExpanded=false
+                        outputunit="Meters"
+                        oconversionFactor.value=1.0
+                        unitconvert()
+
+                    })
+                    DropdownMenuItem(text = { Text("Feets") }, onClick = {
+                        oExpanded=false
+                        outputunit="Feets"
+                        oconversionFactor.value=0.3048
+                        unitconvert()
+
+                    })
+                    DropdownMenuItem(text = { Text("Millimeters") }, onClick = {
+
+                        oExpanded=false
+                        outputunit="Millimeters"
+                        oconversionFactor.value=0.001
+                        unitconvert()
+
+                    })
                 }
 
             }
@@ -121,7 +183,7 @@ fun Convert() {
 
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Text("Result")
+        Text("Result $outputvalue $outputunit")
     }
 
 }

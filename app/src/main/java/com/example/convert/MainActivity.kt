@@ -1,5 +1,6 @@
 package com.example.convert
 
+import android.R
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,6 +35,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
+import androidx.compose.material3.MaterialTheme
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ fun Convert() {
 
     fun unitconvert(){
         val inputvaluedouble=inputvalue.toDoubleOrNull()?:0.0
-        val result=(inputvaluedouble*conversionFactor.value*100 / oconversionFactor.value).roundToInt()/100
+        val result=(inputvaluedouble*conversionFactor.value*100.0 / oconversionFactor.value).roundToInt()/100
         outputvalue=result.toString()
     }
 
@@ -77,7 +80,7 @@ fun Convert() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Unit Convertor")
+        Text("Unit Convertor", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(10.dp))
 
         OutlinedTextField(
@@ -85,6 +88,7 @@ fun Convert() {
             onValueChange = {inputvalue=it
                 unitconvert()
                             },
+
             label = {
                 Text("Enter Value")
             }
@@ -183,7 +187,11 @@ fun Convert() {
 
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Text("Result $outputvalue $outputunit")
+        Text("Result $outputvalue $outputunit", style = MaterialTheme.typography.headlineMedium)
+
+
+
+
     }
 
 }
